@@ -23,9 +23,9 @@ plugins {
 dependencies {
     teavm(teavm.libs.jsoApis)
     teavm("org.scala-lang:scala-library:2.13.10")
+    teavm("org.typelevel:cats-effect_2.13:3.4.2")
 }
 
-teavm.js {
-    addedToWebApp.set(true)
+teavm.wasi {
     mainClass.set("org.teavm.samples.scala.Client")
 }

@@ -375,6 +375,54 @@ public class GraphTest {
         assertFalse("Should be reducible", GraphUtils.isIrreducible(result));
         assertTrue("Should be equivalent", isEquivalent(backend, graph));
     }
+
+    @Test
+    public void irreducibleGraphSplit8() {
+        var builder = new GraphBuilder();
+        addEdges(builder, 0, 26, 27);
+        addEdges(builder, 1, 18, 19);
+        addEdges(builder, 2, 22);
+        addEdges(builder, 3, 1);
+        addEdges(builder, 4, 5, 6, 23);
+        addEdges(builder, 5, 17, 23);
+        addEdges(builder, 6, 23, 28);
+        addEdges(builder, 7, 5, 23);
+        addEdges(builder, 8, 20, 23);
+        addEdges(builder, 9, 15, 23);
+        addEdges(builder, 10, 11, 12, 21, 23);
+        addEdges(builder, 11, 13, 21, 23);
+        addEdges(builder, 12, 21, 23, 32);
+        addEdges(builder, 13, 14, 21, 23);
+        addEdges(builder, 14, 9, 10, 21, 23);
+        addEdges(builder, 15, 16, 23);
+        addEdges(builder, 16, 7, 8, 23);
+        addEdges(builder, 17, 3, 4, 23);
+        addEdges(builder, 19, 18);
+        addEdges(builder, 20, 14, 21, 23);
+        addEdges(builder, 21, 23);
+        addEdges(builder, 22, 17, 23);
+        addEdges(builder, 24, 1, 2);
+        addEdges(builder, 25, 24);
+        addEdges(builder, 26, 24, 25);
+        addEdges(builder, 27, 26, 30, 34);
+        addEdges(builder, 28, 23, 29, 31);
+        addEdges(builder, 29, 16, 23);
+        addEdges(builder, 30, 28);
+        addEdges(builder, 32, 21, 23, 33, 35);
+        addEdges(builder, 33, 13, 21, 23);
+        addEdges(builder, 34, 32);
+
+        var graph = builder.build();
+        var backend = new DefaultGraphSplittingBackend(graph);
+        var weights = new int[] { 3, 1, 6, 2, 5, 3, 6, 1, 8, 2, 5, 1, 4, 3, 3, 3, 3, 3, 2, 4, 8, 2, 12, 2, 7, 2, 6, 2,
+                3, 11, 9, 12, 3, 1, 15, 18 };
+        GraphUtils.splitIrreducibleGraph(graph, weights, backend);
+        var result = backend.getGraph();
+
+        assertTrue("Should be irreducible", GraphUtils.isIrreducible(graph));
+        assertFalse("Should be reducible", GraphUtils.isIrreducible(result));
+        assertTrue("Should be equivalent", isEquivalent(backend, graph));
+    }
     
     private static void addEdges(GraphBuilder builder, int from, int... to) {
         for (int target : to) {

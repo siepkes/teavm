@@ -45,5 +45,8 @@ tasks.test {
     systemProperty("teavm.junit.minified", providers.gradleProperty("teavm.tests.minified"))
     systemProperty("teavm.junit.optimized", providers.gradleProperty("teavm.tests.optimized"))
     systemProperty("teavm.junit.js.decodeStack", providers.gradleProperty("teavm.tests.decodeStack"))
+    systemProperty("teavm.junit.wasm", "true")
+    systemProperty("teavm.junit.wasm.runner", "browser-chrome")
+    systemProperty("teavm.junit.js", "false")
     maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2).coerceAtLeast(1)
 }

@@ -17,8 +17,6 @@ package org.teavm.backend.lowlevel.transform;
 
 import com.carrotsearch.hppc.IntHashSet;
 import com.carrotsearch.hppc.IntIntHashMap;
-import com.carrotsearch.hppc.IntIntMap;
-import com.carrotsearch.hppc.IntSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
@@ -484,20 +482,20 @@ public class CoroutineTransformation {
     class SplittingBackend implements GraphSplittingBackend {
         @Override
         public int[] split(int[] domain, int[] nodes) {
-            int[] copies = new int[nodes.length];
-            IntIntMap map = new IntIntHashMap();
-            IntSet nodeSet = IntHashSet.from(nodes);
-            List<List<Incoming>> outputs = ProgramUtils.getPhiOutputs(program);
+            var copies = new int[nodes.length];
+            var map = new IntIntHashMap();
+            var nodeSet = IntHashSet.from(nodes);
+            var outputs = ProgramUtils.getPhiOutputs(program);
             for (int i = 0; i < nodes.length; ++i) {
                 int node = nodes[i];
-                BasicBlock block = program.basicBlockAt(node);
-                BasicBlock blockCopy = program.createBasicBlock();
+                var block = program.basicBlockAt(node);
+                var blockCopy = program.createBasicBlock();
                 ProgramUtils.copyBasicBlock(block, blockCopy);
                 copies[i] = blockCopy.getIndex();
-                map.put(node, copies[i] + 1);
+                map.put(node, blockCopy.getIndex() + 1);
             }
 
-            BasicBlockMapper copyBlockMapper = new BasicBlockMapper((int block) -> {
+            var copyBlockMapper = new BasicBlockMapper((int block) -> {
                 int mappedIndex = map.get(block);
                 return mappedIndex == 0 ? block : mappedIndex - 1;
             });
@@ -510,10 +508,10 @@ public class CoroutineTransformation {
 
             for (int i = 0; i < nodes.length; ++i) {
                 int node = nodes[i];
-                BasicBlock blockCopy = program.basicBlockAt(copies[i]);
-                for (Incoming output : outputs.get(node)) {
+                var blockCopy = program.basicBlockAt(copies[i]);
+                for (var output : outputs.get(node)) {
                     if (!nodeSet.contains(output.getPhi().getBasicBlock().getIndex())) {
-                        Incoming outputCopy = new Incoming();
+                        var outputCopy = new Incoming();
                         outputCopy.setSource(blockCopy);
                         outputCopy.setValue(output.getValue());
                         output.getPhi().getIncomings().add(outputCopy);

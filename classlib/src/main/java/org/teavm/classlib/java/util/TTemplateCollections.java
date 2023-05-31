@@ -36,6 +36,10 @@ public final class TTemplateCollections {
             this.list = list;
         }
 
+        public ImmutableArrayList(TCollection<? extends T> list) {
+            this.list = (T[]) list.toArray();
+        }
+
         @Override
         public T get(int index) {
             return list[index];
@@ -416,17 +420,25 @@ public final class TTemplateCollections {
         @SuppressWarnings("unchecked")
         @SafeVarargs
         NEtriesMap(Entry<K, V>... data) {
-            Entry<K, V>[] table = new Entry[data.length];
+            this.data = entrySetToTable(data);
+        }
+
+        NEtriesMap(TMap<? extends K, ? extends V> map) {
+            this.data = entrySetToTable((Entry<K, V>[]) map.entrySet().toArray());
+        }
+
+        private Entry<K, V>[] entrySetToTable(Entry<K, V>[] entries) {
+            Entry<K, V>[] table = new Entry[entries.length];
             Arrays.fill(table, null);
 
-            for (Entry<K, V> entry : data) {
+            for (Entry<K, V> entry : entries) {
                 Objects.requireNonNull(entry.getKey());
                 Objects.requireNonNull(entry.getValue());
 
-                int suggestedIndex = Math.abs(entry.getKey().hashCode()) % data.length;
+                int suggestedIndex = Math.abs(entry.getKey().hashCode()) % entries.length;
                 int index = suggestedIndex;
                 boolean found = false;
-                while (index < data.length) {
+                while (index < entries.length) {
                     Entry<K, V> existingEntry = table[index];
                     if (existingEntry == null) {
                         found = true;
@@ -451,7 +463,7 @@ public final class TTemplateCollections {
                 table[index] = new ImmutableEntry<>(entry.getKey(), entry.getValue());
             }
 
-            this.data = table;
+            return table;
         }
 
         @Override

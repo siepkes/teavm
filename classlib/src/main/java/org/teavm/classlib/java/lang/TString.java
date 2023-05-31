@@ -155,9 +155,9 @@ public class TString extends TObject implements TSerializable, TComparable<TStri
     public boolean isEmpty() {
         return characters.length == 0;
     }
-    
+
     public boolean isBlank() {
-        
+
         for (int i = 0; i < characters.length; i++) {
             if (characters[i] != ' ') {
                 return false;
@@ -485,6 +485,22 @@ public class TString extends TObject implements TSerializable, TComparable<TStri
             --upper;
         }
         return substring(lower, upper + 1);
+    }
+
+    public TString stripLeading() {
+        var lower = 0;
+        while (lower <= length() && Character.isWhitespace(charAt(lower))) {
+            ++lower;
+        }
+        return substring(lower, length() + 1);
+    }
+
+    public TString stripTrailing() {
+        var upper = length() - 1;
+        while (0 <= upper && Character.isWhitespace(charAt(upper))) {
+            --upper;
+        }
+        return substring(0, upper + 1);
     }
 
     @Override

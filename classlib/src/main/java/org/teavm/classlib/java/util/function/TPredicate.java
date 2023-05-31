@@ -36,4 +36,9 @@ public interface TPredicate<T> {
     default TPredicate<T> isEqual(Object targetRef) {
         return t -> TObjects.equals(t, targetRef);
     }
+
+    default <T> TPredicate<T> not(TPredicate<? super T> other) {
+        TObjects.requireNonNull(other);
+        return (TPredicate<T>) other.negate();
+    }
 }

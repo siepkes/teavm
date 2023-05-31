@@ -162,6 +162,16 @@ public abstract class TNumberFormat extends TFormat {
         return new TDecimalFormat(pattern, new TDecimalFormatSymbols(locale));
     }
 
+    public static TNumberFormat getCompactNumberInstance() {
+        // FIXME: Implement.
+        return null;
+    }
+    
+    public static TNumberFormat getCompactNumberInstance(TLocale locale, TNumberFormat.Style formatStyle) {
+        // FIXME: Implement.
+        return null;
+    }
+    
     @Override
     public int hashCode() {
         return (groupingUsed ? 1231 : 1237) + (parseIntegerOnly ? 1231 : 1237)
@@ -262,5 +272,10 @@ public abstract class TNumberFormat extends TFormat {
         protected Field(String fieldName) {
             super(fieldName);
         }
+    }
+    
+    public enum Style {
+        SHORT,
+        LONG
     }
 }
